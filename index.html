@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Surprise for You!</title>
     <style>
         body { 
@@ -21,15 +22,20 @@
             cursor: pointer;
             transition: 0.8s ease-in-out;
             animation: shake 2s infinite;
+            width: 90%; 
+            max-width: 350px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .envelope {
             position: relative;
-            width: 300px;
-            height: 200px;
+            width: 100%;
+            height: 220px;
             background: #ff69b4;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             z-index: 5;
             display: flex;
@@ -42,28 +48,37 @@
             position: absolute;
             top: 0;
             left: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 110px solid #ff1493;
+            width: 0;
+            height: 0;
+            border-left: 175px solid transparent; 
+            border-right: 175px solid transparent;
+            border-top: 130px solid #ff1493;
             transform-origin: top;
             transition: transform 0.6s ease-in-out;
             z-index: 6;
+        }
+        
+        @media (max-width: 400px) {
+            .flap {
+                border-left-width: 160px;
+                border-right-width: 160px;
+            }
         }
 
         .envelope-text {
             color: white;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.2em;
             letter-spacing: 1px;
             z-index: 7;
-            margin-top: 40px; /* Adjusted to sit better in the middle */
+            margin-top: 50px;
         }
 
         .envelope-subtext {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 0.8em;
+            font-size: 0.9em;
             z-index: 7;
-            margin-top: 8px;
+            margin-top: 10px;
             font-style: italic;
         }
 
@@ -72,28 +87,29 @@
             visibility: hidden;
             opacity: 0;
             background: white; 
-            padding: 35px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+            padding: 40px 25px; 
+            border-radius: 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25); 
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.5);
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10;
-            width: 340px;
+            width: 85%;
+            max-width: 380px;
         }
 
         .new-year-note {
             background: #fff0f6;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 12px;
             font-style: italic;
             color: #d81b60;
-            margin-top: 15px;
-            font-size: 0.95em;
-            border-left: 4px solid #ff69b4;
-            line-height: 1.4;
+            margin: 20px 0;
+            font-size: 1em;
+            border-left: 5px solid #ff69b4;
+            line-height: 1.5;
         }
 
         /* --- 3. ANIMATION STATES --- */
@@ -112,19 +128,19 @@
             animation: float 3s ease-in-out infinite 0.8s;
         }
 
-        .hide-envelope { transform: translateY(300px); opacity: 0; pointer-events: none; }
+        .hide-envelope { transform: translateY(400px); opacity: 0; pointer-events: none; }
 
-        h1 { color: #ff69b4; margin-bottom: 5px; font-size: 1.8em; }
+        h1 { color: #ff69b4; margin-bottom: 5px; font-size: 2em; }
         
         .btn { 
-            background: #ff69b4; color: white; padding: 12px 25px; 
-            border-radius: 30px; cursor: pointer; border: none; margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(255,105,180,0.3);
-            font-weight: bold;
+            background: #ff69b4; color: white; padding: 18px 35px; 
+            border-radius: 40px; cursor: pointer; border: none; 
+            font-weight: bold; font-size: 1.1em;
+            box-shadow: 0 8px 20px rgba(255,105,180,0.4);
         }
 
         .particle {
-            position: fixed; pointer-events: none; z-index: 100; font-size: 2rem;
+            position: fixed; pointer-events: none; z-index: 100; font-size: 2.5rem;
             animation: explode 2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
 
@@ -135,11 +151,15 @@
 
         @keyframes float {
             0%, 100% { transform: translate(-50%, -50%); }
-            50% { transform: translate(-50%, -55%); }
+            50% { transform: translate(-50%, -53%); }
         }
     </style>
 </head>
 <body>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="envelope-wrapper" onclick="openEnvelope()">
         <div class="flap" id="flap"></div>
@@ -147,27 +167,33 @@
             <div class="envelope-text">YOU GOT A MESSAGE 💌</div>
             <div class="envelope-subtext">i hope you will like my little gift</div>
         </div>
-        <p id="instruction" style="margin-top: 20px; color: #ff69b4; font-weight: bold; animation: pulse 1.5s infinite;">Click to open your surprise!</p>
+        <p id="instruction" style="margin-top: 25px; color: #ff69b4; font-weight: bold; font-size: 1.1em;">Click to open your surprise!</p>
     </div>
 
     <div id="birthday-card">
         <h1>🎉 Happy Birthday! 🎉</h1>
-        <p><strong>Ushashi / Anushka</strong></p>
+        <p style="font-size: 1.3em;"><strong>Ushashi / Anushka</strong></p>
         <p>Wishing you the best day ever!</p>
         
         <div class="new-year-note">
-            "You are the best person I met last year cuz today's January 1st Happy New Year too! ✨"
+            "You are the best person I met last year cuz today is Jan 1 also Happy New Year too! ✨"
         </div>
 
         <button class="btn" onclick="celebrate(event)">TAP FOR MAGIC</button>
         
-        <div id="confetti-text" style="display:none; font-size: 1.5em; margin-top: 15px;">
+        <div id="confetti-text" style="display:none; font-size: 1.8em; margin-top: 20px;">
             🎊🎆🥳🥂✨
         </div>
     </div>
 
     <script>
         function openEnvelope() {
+            // Start Music from singing part
+            const audio = document.getElementById('bg-music');
+            // Change 0 to the exact second singing starts if needed
+            audio.currentTime = 0; 
+            audio.play().catch(e => console.log("Music play failed:", e));
+
             document.getElementById('envelope-wrapper').style.animation = "none";
             document.getElementById('flap').classList.add('open-flap');
             document.getElementById('instruction').style.opacity = "0";
@@ -182,15 +208,18 @@
             document.getElementById('confetti-text').style.display = 'block';
             const emojis = ['❤️', '🎂', '✨', '🎈', '🎉', '🥂', '🎆', '🌟'];
             
+            const clickX = event.clientX || (event.touches ? event.touches[0].clientX : 0);
+            const clickY = event.clientY || (event.touches ? event.touches[0].clientY : 0);
+
             for (let i = 0; i < 45; i++) {
                 const p = document.createElement('span');
                 p.className = 'particle';
                 p.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-                p.style.left = event.clientX + 'px';
-                p.style.top = event.clientY + 'px';
+                p.style.left = clickX + 'px';
+                p.style.top = clickY + 'px';
                 
-                const dx = (Math.random() - 0.5) * 1200 + "px";
-                const dy = (Math.random() - 0.7) * 1000 + "px";
+                const dx = (Math.random() - 0.5) * 800 + "px";
+                const dy = (Math.random() - 0.7) * 800 + "px";
                 const rotation = Math.random() * 720 + "deg";
 
                 p.style.setProperty('--dx', dx);
