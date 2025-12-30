@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A Surprise for You!</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6e9ff 100%);
+            text-align: center; 
+            font-family: 'Arial', sans-serif; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- 1. ENVELOPE STYLES --- */
+        #envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: 0.8s ease-in-out;
+            animation: shake 2s infinite;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #ff69b4;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #ff1493;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 6;
+        }
+
+        .envelope-text {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            z-index: 7;
+            margin-top: 40px; /* Adjusted to sit better in the middle */
+        }
+
+        .envelope-subtext {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8em;
+            z-index: 7;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* --- 2. THE CARD --- */
+        #birthday-card {
+            visibility: hidden;
+            opacity: 0;
+            background: white; 
+            padding: 35px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            width: 340px;
+        }
+
+        .new-year-note {
+            background: #fff0f6;
+            padding: 12px;
+            border-radius: 10px;
+            font-style: italic;
+            color: #d81b60;
+            margin-top: 15px;
+            font-size: 0.95em;
+            border-left: 4px solid #ff69b4;
+            line-height: 1.4;
+        }
+
+        /* --- 3. ANIMATION STATES --- */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30%, 50% { transform: rotate(2deg); }
+            20%, 40% { transform: rotate(-2deg); }
+        }
+
+        .open-flap { transform: rotateX(180deg); z-index: 1; }
+
+        .show-card {
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: translate(-50%, -50%) scale(1) !important;
+            animation: float 3s ease-in-out infinite 0.8s;
+        }
+
+        .hide-envelope { transform: translateY(300px); opacity: 0; pointer-events: none; }
+
+        h1 { color: #ff69b4; margin-bottom: 5px; font-size: 1.8em; }
+        
+        .btn { 
+            background: #ff69b4; color: white; padding: 12px 25px; 
+            border-radius: 30px; cursor: pointer; border: none; margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(255,105,180,0.3);
+            font-weight: bold;
+        }
+
+        .particle {
+            position: fixed; pointer-events: none; z-index: 100; font-size: 2rem;
+            animation: explode 2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rotation)) scale(0.5); opacity: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -55%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="envelope-wrapper" onclick="openEnvelope()">
+        <div class="flap" id="flap"></div>
+        <div class="envelope">
+            <div class="envelope-text">YOU GOT A MESSAGE 💌</div>
+            <div class="envelope-subtext">i hope you will like my little gift</div>
+        </div>
+        <p id="instruction" style="margin-top: 20px; color: #ff69b4; font-weight: bold; animation: pulse 1.5s infinite;">Click to open your surprise!</p>
+    </div>
+
+    <div id="birthday-card">
+        <h1>🎉 Happy Birthday! 🎉</h1>
+        <p><strong>Ushashi / Anushka</strong></p>
+        <p>Wishing you the best day ever!</p>
+        
+        <div class="new-year-note">
+            "You are the best person I met last year cuz today's January 1st Happy New Year too! ✨"
+        </div>
+
+        <button class="btn" onclick="celebrate(event)">TAP FOR MAGIC</button>
+        
+        <div id="confetti-text" style="display:none; font-size: 1.5em; margin-top: 15px;">
+            🎊🎆🥳🥂✨
+        </div>
+    </div>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('envelope-wrapper').style.animation = "none";
+            document.getElementById('flap').classList.add('open-flap');
+            document.getElementById('instruction').style.opacity = "0";
+
+            setTimeout(() => {
+                document.getElementById('birthday-card').classList.add('show-card');
+                document.getElementById('envelope-wrapper').classList.add('hide-envelope');
+            }, 600);
+        }
+
+        function celebrate(event) {
+            document.getElementById('confetti-text').style.display = 'block';
+            const emojis = ['❤️', '🎂', '✨', '🎈', '🎉', '🥂', '🎆', '🌟'];
+            
+            for (let i = 0; i < 45; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                p.style.left = event.clientX + 'px';
+                p.style.top = event.clientY + 'px';
+                
+                const dx = (Math.random() - 0.5) * 1200 + "px";
+                const dy = (Math.random() - 0.7) * 1000 + "px";
+                const rotation = Math.random() * 720 + "deg";
+
+                p.style.setProperty('--dx', dx);
+                p.style.setProperty('--dy', dy);
+                p.style.setProperty('--rotation', rotation);
+                
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 2000);
+            }
+
+            setTimeout(() => {
+                alert("Happy Birthday & Happy New Year!");
+            }, 500);
+        }
+    </script>
+</body>
+</html>
